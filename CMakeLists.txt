@@ -12,6 +12,7 @@ list(APPEND CMAKE_PREFIX_PATH
     "${CMAKE_SOURCE_DIR}/3partylib/glslang/lib/cmake/glslang"
     "${CMAKE_SOURCE_DIR}/3partylib/glslang/SPIRV-Tools-opt/cmake"
     "${CMAKE_SOURCE_DIR}/3partylib/glslang/SPIRV-Tools/cmake"
+    "${CMAKE_SOURCE_DIR}/3partylib/log4cplus/lib/cmake/log4cplus"
 )
 
 find_package (Vulkan REQUIRED)
@@ -19,6 +20,7 @@ find_package (glfw3 REQUIRED)
 find_package (glm REQUIRED)
 find_package (tinyobjloader REQUIRED)
 find_package (glslang CONFIG REQUIRED)
+find_package (log4cplus CONFIG REQUIRED)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 add_definitions(-DROOT_DIR="${CMAKE_SOURCE_DIR}")
@@ -54,3 +56,4 @@ add_subdirectory(002_color_cube_with_camera)
 add_subdirectory(vk-bootstrap )
 add_subdirectory(003_test_vk-bootstrap_triangle)
 add_subdirectory(004_test_vk-bootstrap_compute)
+add_subdirectory(005_triangle)

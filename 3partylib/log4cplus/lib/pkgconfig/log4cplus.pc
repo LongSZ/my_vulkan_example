@@ -1,0 +1,13 @@
+prefix=C:/open_src/log4cplus-REL_2_1_2/log4cplus_install
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+modules=
+
+Name: log4cplus
+Version: 2.1.2
+Description: Simple to use, thread-safe C++ logging API
+Requires:
+Libs: -L${libdir} -llog4cplus
+Libs.private: 
+Cflags: -I${includedir}
