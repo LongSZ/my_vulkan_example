@@ -51,3 +51,4 @@ endfunction()
 
 add_subdirectory(001_hello_vulkan_triangle)
 add_subdirectory(002_color_cube_with_camera)
+add_subdirectory(003_test_vk-bootstrap)
