@@ -6,7 +6,7 @@ add_executable(003_test_vk-bootstrap ${SOURCES})
 
 add_subdirectory(
     ${CMAKE_SOURCE_DIR}/vk-bootstrap 
-    ${CMAKE_BINARY_DIR}/vk-bootstrap/build
+    ${CMAKE_SOURCE_DIR}/vk-bootstrap/build
 )
 
 target_link_libraries(003_test_vk-bootstrap PRIVATE 
