@@ -9,14 +9,19 @@ list(APPEND CMAKE_PREFIX_PATH
     "${CMAKE_SOURCE_DIR}/3partylib/tinyobjloader/lib/tinyobjloader/cmake"
     "${CMAKE_SOURCE_DIR}/3partylib/GLFW/lib/cmake/glfw3"
     "${CMAKE_SOURCE_DIR}/3partylib/glm/share/glm"
+    "${CMAKE_SOURCE_DIR}/3partylib/glslang/lib/cmake/glslang"
+    "${CMAKE_SOURCE_DIR}/3partylib/glslang/SPIRV-Tools-opt/cmake"
+    "${CMAKE_SOURCE_DIR}/3partylib/glslang/SPIRV-Tools/cmake"
 )
 
 find_package (Vulkan REQUIRED)
 find_package (glfw3 REQUIRED)
 find_package (glm REQUIRED)
 find_package (tinyobjloader REQUIRED)
+find_package (glslang CONFIG REQUIRED)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+add_definitions(-DROOT_DIR="${CMAKE_SOURCE_DIR}")
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "Default install path" FORCE)
@@ -45,3 +50,4 @@ function(set_debug_paths target_name)
 endfunction()
 
 add_subdirectory(001_hello_vulkan_triangle)
+add_subdirectory(002_color_cube_with_camera)
