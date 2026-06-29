@@ -128,6 +128,7 @@ std::vector<const char*> getRequiredExtensions() {
 
 //创建Vulkan实例的方法
 void MyVulkanManager::init_vulkan_instance() {
+    instanceExtensionNames = getRequiredExtensions();
     instanceExtensionNames.push_back(VK_KHR_SURFACE_EXTENSION_NAME);//初始化所需实例扩展名称列表
 
     VkApplicationInfo app_info = {};//构建应用信息结构体实例
