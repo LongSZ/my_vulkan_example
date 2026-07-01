@@ -218,16 +218,11 @@ void ShaderQueueSuit_Common::initVertexAttributeInfo() {
 }
 
 void ShaderQueueSuit_Common::create_pipe_line(VkDevice &device, VkRenderPass &renderPass) {
-    std::vector<VkDynamicState> dynamicStates = {
-    VK_DYNAMIC_STATE_VIEWPORT,
-    VK_DYNAMIC_STATE_SCISSOR
-    };
-
     VkPipelineDynamicStateCreateInfo dynamicState = {};//管线动态状态创建信息
     dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;//结构体类型
     dynamicState.pNext = NULL;//自定义数据的指针
-    dynamicState.pDynamicStates = dynamicStates.data();//动态状态启用标志数组
-    dynamicState.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());//启用的动态状态项数量
+    dynamicState.pDynamicStates = NULL;//动态状态启用标志数组
+    dynamicState.dynamicStateCount = 0;//启用的动态状态项数量
 
     VkPipelineVertexInputStateCreateInfo vi;//管线顶点数据输入状态创建信息
     vi.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
