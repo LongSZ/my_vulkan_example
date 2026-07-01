@@ -138,7 +138,7 @@ void MyVulkanManager::init_vulkan_instance() {
     app_info.applicationVersion = 1;//应用的版本号
     app_info.pEngineName = "HelloVulkan";//应用的引擎名称
     app_info.engineVersion = 1;//应用的引擎版本号
-    app_info.apiVersion = VK_API_VERSION_1_0;//使用的Vulkan图形应用程序API版本
+    app_info.apiVersion = VK_API_VERSION_1_4;//使用的Vulkan图形应用程序API版本
 
     VkInstanceCreateInfo inst_info = {};//构建实例创建信息结构体实例
     inst_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;//结构体的类型
@@ -782,7 +782,23 @@ void MyVulkanManager::drawObject() {
         MyVulkanManager::flushTexToDesSet();//更新绘制用描述集
 
         vkCmdBeginRenderPass(cmdBuffer, &rp_begin, VK_SUBPASS_CONTENTS_INLINE);//启动渲染通道
+
+        VkViewport viewport{};
+        viewport.x = 0.0f;
+        viewport.y = 0.0f;
+        viewport.width = static_cast<float>(swapchainExtent.width);
+        viewport.height = static_cast<float>(swapchainExtent.height);
+        viewport.minDepth = 0.0f;
+        viewport.maxDepth = 1.0f;
+        vkCmdSetViewport(cmdBuffer, 0, 1, &viewport);
+
+        VkRect2D scissor{};
+        scissor.offset = { 0, 0 };
+        scissor.extent = swapchainExtent;
+        vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);
+        
         triForDraw->drawSelf(cmdBuffer, sqsCL->pipelineLayout, sqsCL->pipeline, &(sqsCL->descSet[0]));    //绘制三色三角形
+        
         vkCmdEndRenderPass(cmdBuffer);//结束渲染通道
         result = vkEndCommandBuffer(cmdBuffer);//结束命令缓冲
 
