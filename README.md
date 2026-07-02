@@ -10,8 +10,8 @@
 
 6. 010_draw_by_point_index (4.10)
 
-7. 011_different_camera_views_under_perspective_projection (4.11)
-   透视投影下不同相机视角观察结果
+8. 011_different_camera_views_under_perspective_projection (4.11)
+   透视投影下不同相机视角观察场景中物体变形
 
 9. 012_occlusion_error_for_depth_value_uneven distribution_by_near_values (4.12) ,
    由于视角及 far 参数相同情况下不同 near 值对应深度值分布不均匀，导致相邻很近的面遮挡错误
