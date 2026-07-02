@@ -146,8 +146,8 @@ void ShaderQueueSuit_Common::init_descriptor_set(VkDevice &device) {
 }
 
 void ShaderQueueSuit_Common::create_shader(VkDevice &device) {
-    std::string vertStr = FileUtil::loadAssetStr("shaders/commonTexLight.vert");//加载顶点着色器脚本
-    std::string fragStr = FileUtil::loadAssetStr("shaders/commonTexLight.frag");//加载片元着色器脚本
+    std::string vertStr = FileUtil::loadAssetStr("shaders/005_triangle.vert");//加载顶点着色器脚本
+    std::string fragStr = FileUtil::loadAssetStr("shaders/005_triangle.frag");//加载片元着色器脚本
 
     shaderStages[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     shaderStages[0].pNext = NULL;//自定义数据的指针
