@@ -12,8 +12,7 @@
 #include "log4cplus_log.h"
 
 //静态成员实现
-bool MyVulkanManager::loopDrawFlag = true;
-std::vector<const char *>  MyVulkanManager::instanceExtensionNames;
+std::vector<const char*>  MyVulkanManager::instanceExtensionNames;
 VkInstance MyVulkanManager::instance;
 uint32_t MyVulkanManager::gpuCount;
 std::vector<VkPhysicalDevice> MyVulkanManager::gpus;
@@ -22,7 +21,7 @@ std::vector<VkQueueFamilyProperties> MyVulkanManager::queueFamilyprops;
 uint32_t MyVulkanManager::queueGraphicsFamilyIndex;
 VkQueue MyVulkanManager::queueGraphics;
 uint32_t MyVulkanManager::queuePresentFamilyIndex;
-std::vector<const char *> MyVulkanManager::deviceExtensionNames;
+std::vector<const char*> MyVulkanManager::deviceExtensionNames;
 VkDevice MyVulkanManager::device;
 VkCommandPool MyVulkanManager::cmdPool;
 VkCommandBuffer MyVulkanManager::cmdBuffer;
@@ -57,9 +56,9 @@ VkClearValue MyVulkanManager::clear_values[2];
 VkRenderPassBeginInfo MyVulkanManager::rp_begin;
 VkFence MyVulkanManager::taskFinishFence;
 VkPresentInfoKHR MyVulkanManager::present;
-VkFramebuffer *MyVulkanManager::framebuffers;
-ShaderQueueSuit_Common *MyVulkanManager::sqsCL;
-DrawableObjectCommonLight *MyVulkanManager::triForDraw;
+VkFramebuffer* MyVulkanManager::framebuffers;
+ShaderQueueSuit_Common* MyVulkanManager::sqsCL;
+DrawableObjectCommonLight* MyVulkanManager::triForDraw;
 float MyVulkanManager::xAngle = 0;
 
 std::vector<const char*> getRequiredExtensions() {
@@ -100,7 +99,7 @@ void MyVulkanManager::init_vulkan_instance() {
     result = vkCreateInstance(&inst_info, NULL, &instance);
     if (result != VK_SUCCESS) {//检查实例是否创建成功
         LHW_ERROR("Vulkan实例创建失败!");
-    } 
+    }
 }
 
 //销毁Vulkan实例的方法
@@ -141,7 +140,7 @@ void MyVulkanManager::create_vulkan_devices() {
         }
     }
 
-    float queue_priorities[1] = {0.0};//创建队列优先级数组
+    float queue_priorities[1] = { 0.0 };//创建队列优先级数组
     queueInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;//给出结构体类型
     queueInfo.pNext = NULL;//自定义数据的指针
     queueInfo.queueCount = 1;//指定队列数量
@@ -194,7 +193,7 @@ void MyVulkanManager::create_vulkan_CommandBuffer() {
     cmd_buf_info.pInheritanceInfo = NULL;//命令缓冲继承信息
     cmd_bufs[0] = cmdBuffer;//要提交到队列执行的命令缓冲数组
 
-    VkPipelineStageFlags *pipe_stage_flags = new VkPipelineStageFlags();//目标管线阶段
+    VkPipelineStageFlags* pipe_stage_flags = new VkPipelineStageFlags();//目标管线阶段
     *pipe_stage_flags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     submit_info[0].pNext = NULL;//自定义数据的指针
     submit_info[0].sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;//给定结构体类型
@@ -208,12 +207,12 @@ void MyVulkanManager::create_vulkan_CommandBuffer() {
 
 //销毁命令缓冲的方法
 void MyVulkanManager::destroy_vulkan_CommandBuffer() {
-    VkCommandBuffer cmdBufferArray[1] = {cmdBuffer};//创建要释放的命令缓冲数组
+    VkCommandBuffer cmdBufferArray[1] = { cmdBuffer };//创建要释放的命令缓冲数组
     vkFreeCommandBuffers(//释放命令缓冲
-            device, //所属逻辑设备
-            cmdPool,//所属命令池
-            1,//要销毁的命令缓冲数量
-            cmdBufferArray//要销毁的命令缓冲数组
+        device, //所属逻辑设备
+        cmdPool,//所属命令池
+        1,//要销毁的命令缓冲数量
+        cmdBufferArray//要销毁的命令缓冲数组
     );
     vkDestroyCommandPool(device, cmdPool, NULL);//销毁命令池
 }
@@ -224,7 +223,7 @@ void MyVulkanManager::create_vulkan_swapChain() {
         LHW_ERROR("failed to create window surface!");
         throw std::runtime_error("failed to create window surface!");
     }
-    VkBool32 *pSupportsPresent = (VkBool32 *) malloc(queueFamilyCount * sizeof(VkBool32));
+    VkBool32* pSupportsPresent = (VkBool32*)malloc(queueFamilyCount * sizeof(VkBool32));
     for (uint32_t i = 0; i < queueFamilyCount; i++) {//遍历设备对应的队列家族列表
         vkGetPhysicalDeviceSurfaceSupportKHR(gpus[0], i, surface, &pSupportsPresent[i]);
         LHW_INFO("queue Family Index = " << i << ", " << (pSupportsPresent[i] == 1 ? "support" : "not support") << "display");
@@ -268,7 +267,7 @@ void MyVulkanManager::create_vulkan_swapChain() {
     uint32_t formatCount;//支持的格式数量
     VkResult result = vkGetPhysicalDeviceSurfaceFormatsKHR(gpus[0], surface, &formatCount, NULL);//获取支持的格式数量
     LHW_INFO("支持的格式数量为 " << formatCount);
-    VkSurfaceFormatKHR *surfFormats = (VkSurfaceFormatKHR *) malloc( formatCount * sizeof(VkSurfaceFormatKHR));//分配对应数量的空间
+    VkSurfaceFormatKHR* surfFormats = (VkSurfaceFormatKHR*)malloc(formatCount * sizeof(VkSurfaceFormatKHR));//分配对应数量的空间
     formats.resize(formatCount);//调整对应Vector尺寸
     result = vkGetPhysicalDeviceSurfaceFormatsKHR(gpus[0], surface, &formatCount, surfFormats);//获取支持的格式信息
     for (int i = 0; i < formatCount; i++) {//记录支持的格式信息
@@ -284,7 +283,7 @@ void MyVulkanManager::create_vulkan_swapChain() {
     assert(result == VK_SUCCESS);
 
     //获取支持的显示模式数量
-    result = vkGetPhysicalDeviceSurfacePresentModesKHR(gpus[0], surface, &presentModeCount,  NULL);
+    result = vkGetPhysicalDeviceSurfacePresentModesKHR(gpus[0], surface, &presentModeCount, NULL);
     assert(result == VK_SUCCESS);
     LHW_INFO("显示模式数量为 " << presentModeCount);
 
@@ -321,17 +320,20 @@ void MyVulkanManager::create_vulkan_swapChain() {
         //限制宽度在范围内
         if (swapchainExtent.width < surfCapabilities.minImageExtent.width) {
             swapchainExtent.width = surfCapabilities.minImageExtent.width;
-        } else if (swapchainExtent.width > surfCapabilities.maxImageExtent.width) {
+        }
+        else if (swapchainExtent.width > surfCapabilities.maxImageExtent.width) {
             swapchainExtent.width = surfCapabilities.maxImageExtent.width;
         }
         //限制高度在范围内
         if (swapchainExtent.height < surfCapabilities.minImageExtent.height) {
             swapchainExtent.height = surfCapabilities.minImageExtent.height;
-        } else if (swapchainExtent.height > surfCapabilities.maxImageExtent.height) {
+        }
+        else if (swapchainExtent.height > surfCapabilities.maxImageExtent.height) {
             swapchainExtent.height = surfCapabilities.maxImageExtent.height;
         }
         LHW_INFO("使用自己设置的 宽度 " << swapchainExtent.width << " 高度 " << swapchainExtent.height);
-    } else {
+    }
+    else {
         //若表面有确定尺寸
         swapchainExtent = surfCapabilities.currentExtent;
         LHW_INFO("使用获取的surface能力中的 宽度 " << swapchainExtent.width << " 高度 " << swapchainExtent.height);
@@ -351,7 +353,8 @@ void MyVulkanManager::create_vulkan_swapChain() {
     if (surfCapabilities.supportedTransforms & VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)//若支持所需的变换
     {
         preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
-    } else//若不支持所需的变换
+    }
+    else//若不支持所需的变换
     {
         preTransform = surfCapabilities.currentTransform;
     }
@@ -379,7 +382,7 @@ void MyVulkanManager::create_vulkan_swapChain() {
     {
         swapchain_ci.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
         swapchain_ci.queueFamilyIndexCount = 2;//交换链所需的队列家族索引数量为2
-        uint32_t queueFamilyIndices[2] = {queueGraphicsFamilyIndex, queuePresentFamilyIndex};
+        uint32_t queueFamilyIndices[2] = { queueGraphicsFamilyIndex, queuePresentFamilyIndex };
         swapchain_ci.pQueueFamilyIndices = queueFamilyIndices;//交换链所需的队列家族索引列表
     }
 
@@ -441,12 +444,14 @@ void MyVulkanManager::create_vulkan_DepthBuffer() {
     {
         image_info.tiling = VK_IMAGE_TILING_LINEAR;//采用线性瓦片组织方式
         LHW_INFO("tiling is VK_IMAGE_TILING_LINEAR");
-    } else if (depthFormatProps.optimalTilingFeatures &
-               VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)//是否支持最优瓦片组织方式
+    }
+    else if (depthFormatProps.optimalTilingFeatures &
+        VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)//是否支持最优瓦片组织方式
     {
         image_info.tiling = VK_IMAGE_TILING_OPTIMAL;//采用最优瓦片组织方式
         LHW_INFO("tiling is VK_IMAGE_TILING_OPTIMAL");
-    } else {
+    }
+    else {
         LHW_ERROR("not support VK_FORMAT_D16_UNORM");//打印不支持指定格式的提示信息
     }
     image_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;    //指定结构体类型
@@ -497,7 +502,7 @@ void MyVulkanManager::create_vulkan_DepthBuffer() {
     mem_alloc.allocationSize = mem_reqs.size;//获取所需内存字节数
     VkFlags requirements_mask = 0;//需要的内存类型掩码
     bool flag = memoryTypeFromProperties(memoryroperties, mem_reqs.memoryTypeBits,
-                                         requirements_mask, &mem_alloc.memoryTypeIndex);//获取所需内存类型索引
+        requirements_mask, &mem_alloc.memoryTypeIndex);//获取所需内存类型索引
     assert(flag);//检查获取是否成功
     LHW_INFO("确定内存类型成功 类型索引为 " << mem_alloc.memoryTypeIndex);
     result = vkAllocateMemory(device, &mem_alloc, NULL, &memDepth);    //分配内存
@@ -625,7 +630,7 @@ void MyVulkanManager::create_frame_buffer() {
     fb_info.height = screenHeight;//高度
     fb_info.layers = 1;//层数
     uint32_t i;//循环控制变量
-    framebuffers = (VkFramebuffer *) malloc( swapchainImageCount * sizeof(VkFramebuffer));//为帧缓冲序列动态分配内存
+    framebuffers = (VkFramebuffer*)malloc(swapchainImageCount * sizeof(VkFramebuffer));//为帧缓冲序列动态分配内存
     assert(framebuffers);//检查内存分配是否成功
     for (i = 0; i < swapchainImageCount; i++) //遍历交换链中的各个图像
     {
@@ -649,8 +654,8 @@ void MyVulkanManager::destroy_frame_buffer() {
 void MyVulkanManager::createDrawableObject() {
     TriangleData::genVertexData();//生成三色三角形顶点数据和颜色数据
     triForDraw = new DrawableObjectCommonLight(TriangleData::vdata, TriangleData::dataByteCount,
-                                               TriangleData::vCount, device,
-                                               memoryroperties);//创建绘制用三色三角形对象
+        TriangleData::vCount, device,
+        memoryroperties);//创建绘制用三色三角形对象
 }
 
 //销毁绘制用物体
@@ -685,7 +690,7 @@ void MyVulkanManager::initPresentInfo() {
 void MyVulkanManager::initMatrix() {
     MatrixState3D::setCamera(0, 0, 200, 0, 0, 0, 0, 1, 0);//初始化摄像机
     MatrixState3D::setInitStack();//初始化基本变换矩阵
-    float ratio = (float) screenWidth / (float) screenHeight;//求屏幕长宽比
+    float ratio = (float)screenWidth / (float)screenHeight;//求屏幕长宽比
     MatrixState3D::setProjectFrustum(-ratio, ratio, -1, 1, 1.5f, 1000);//设置投影参数
 }
 
@@ -695,11 +700,11 @@ void MyVulkanManager::flushUniformBuffer()//将当前帧相关数据送入一致
     if (xAngle >= 360) { xAngle = 0; }//限制三色三角形旋转角范围
     MatrixState3D::pushMatrix();//保护现场
     MatrixState3D::rotate(xAngle, 1, 0, 0);//旋转变换
-    float *vertexUniformData = MatrixState3D::getFinalMatrix();//获取最终变换矩阵
+    float* vertexUniformData = MatrixState3D::getFinalMatrix();//获取最终变换矩阵
     MatrixState3D::popMatrix();//恢复现场
-    uint8_t *pData;//CPU访问时的辅助指针
+    uint8_t* pData;//CPU访问时的辅助指针
     VkResult result = vkMapMemory(device, sqsCL->memUniformBuf, 0, sqsCL->bufferByteCount, 0,
-                                      (void **) &pData);//将设备内存映射为CPU可访问
+        (void**)&pData);//将设备内存映射为CPU可访问
     assert(result == VK_SUCCESS);
     memcpy(pData, vertexUniformData, sqsCL->bufferByteCount);//将最终矩阵数据拷贝进显存
     vkUnmapMemory(device, sqsCL->memUniformBuf);    //解除内存映射
@@ -712,54 +717,51 @@ void MyVulkanManager::flushTexToDesSet()//更新绘制用描述集的方法
 }
 
 void MyVulkanManager::drawObject() {
-    FPSUtil::init();//初始化FPS计算
-    while (MyVulkanManager::loopDrawFlag) {//每循环一次绘制一帧画面
-        FPSUtil::calFPS();//计算FPS
-        FPSUtil::before();//一帧开始
+    FPSUtil::calFPS();//计算FPS
+    FPSUtil::before();//一帧开始
 
-        VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX,
-                                                    imageAcquiredSemaphore, VK_NULL_HANDLE,
-                                                    &currentBuffer);//获取交换链中的当前帧索引
-        rp_begin.framebuffer = framebuffers[currentBuffer];    //为渲染通道设置当前帧缓冲
-        vkResetCommandBuffer(cmdBuffer, 0);//恢复命令缓冲到初始状态
-        result = vkBeginCommandBuffer(cmdBuffer, &cmd_buf_info);//启动命令缓冲
+    VkResult result = vkAcquireNextImageKHR(device, swapChain, UINT64_MAX,
+        imageAcquiredSemaphore, VK_NULL_HANDLE,
+        &currentBuffer);//获取交换链中的当前帧索引
+    rp_begin.framebuffer = framebuffers[currentBuffer];    //为渲染通道设置当前帧缓冲
+    vkResetCommandBuffer(cmdBuffer, 0);//恢复命令缓冲到初始状态
+    result = vkBeginCommandBuffer(cmdBuffer, &cmd_buf_info);//启动命令缓冲
 
-        MyVulkanManager::flushUniformBuffer();//将当前帧相关数据送入一致变量缓冲
-        MyVulkanManager::flushTexToDesSet();//更新绘制用描述集
+    MyVulkanManager::flushUniformBuffer();//将当前帧相关数据送入一致变量缓冲
+    MyVulkanManager::flushTexToDesSet();//更新绘制用描述集
 
-        vkCmdBeginRenderPass(cmdBuffer, &rp_begin, VK_SUBPASS_CONTENTS_INLINE);//启动渲染通道
+    vkCmdBeginRenderPass(cmdBuffer, &rp_begin, VK_SUBPASS_CONTENTS_INLINE);//启动渲染通道
 
-        VkViewport viewport{};
-        viewport.x = 0.0f;
-        viewport.y = 0.0f;
-        viewport.width = static_cast<float>(swapchainExtent.width);
-        viewport.height = static_cast<float>(swapchainExtent.height);
-        viewport.minDepth = 0.0f;
-        viewport.maxDepth = 1.0f;
-        vkCmdSetViewport(cmdBuffer, 0, 1, &viewport);
+    VkViewport viewport{};
+    viewport.x = 0.0f;
+    viewport.y = 0.0f;
+    viewport.width = static_cast<float>(swapchainExtent.width);
+    viewport.height = static_cast<float>(swapchainExtent.height);
+    viewport.minDepth = 0.0f;
+    viewport.maxDepth = 1.0f;
+    vkCmdSetViewport(cmdBuffer, 0, 1, &viewport);
 
-        VkRect2D scissor{};
-        scissor.offset = { 0, 0 };
-        scissor.extent = swapchainExtent;
-        vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);
-        
-        triForDraw->drawSelf(cmdBuffer, sqsCL->pipelineLayout, sqsCL->pipeline, &(sqsCL->descSet[0]));    //绘制三色三角形
-        
-        vkCmdEndRenderPass(cmdBuffer);//结束渲染通道
-        result = vkEndCommandBuffer(cmdBuffer);//结束命令缓冲
+    VkRect2D scissor{};
+    scissor.offset = { 0, 0 };
+    scissor.extent = swapchainExtent;
+    vkCmdSetScissor(cmdBuffer, 0, 1, &scissor);
 
-        submit_info[0].waitSemaphoreCount = 1;//等待的信号量数量
-        submit_info[0].pWaitSemaphores = &imageAcquiredSemaphore;//等待的信号量列表
+    triForDraw->drawSelf(cmdBuffer, sqsCL->pipelineLayout, sqsCL->pipeline, &(sqsCL->descSet[0]));    //绘制三色三角形
 
-        result = vkQueueSubmit(queueGraphics, 1, submit_info, taskFinishFence);//提交命令缓冲
-        do {    //等待渲染完毕
-            result = vkWaitForFences(device, 1, &taskFinishFence, VK_TRUE, FENCE_TIMEOUT);
-        } while (result == VK_TIMEOUT);
-        vkResetFences(device, 1, &taskFinishFence);//重置栅栏
-        present.pImageIndices = &currentBuffer;//指定此次呈现的交换链图像索引
-        result = vkQueuePresentKHR(queueGraphics, &present);//执行呈现
-        FPSUtil::after(60);//限制FPS不超过指定的值
-    }
+    vkCmdEndRenderPass(cmdBuffer);//结束渲染通道
+    result = vkEndCommandBuffer(cmdBuffer);//结束命令缓冲
+
+    submit_info[0].waitSemaphoreCount = 1;//等待的信号量数量
+    submit_info[0].pWaitSemaphores = &imageAcquiredSemaphore;//等待的信号量列表
+
+    result = vkQueueSubmit(queueGraphics, 1, submit_info, taskFinishFence);//提交命令缓冲
+    do {    //等待渲染完毕
+        result = vkWaitForFences(device, 1, &taskFinishFence, VK_TRUE, FENCE_TIMEOUT);
+    } while (result == VK_TIMEOUT);
+    vkResetFences(device, 1, &taskFinishFence);//重置栅栏
+    present.pImageIndices = &currentBuffer;//指定此次呈现的交换链图像索引
+    result = vkQueuePresentKHR(queueGraphics, &present);//执行呈现
+    FPSUtil::after(60);//限制FPS不超过指定的值
 }
 
 //执行绘制

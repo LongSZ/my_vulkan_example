@@ -1,13 +1,23 @@
 #include "MyVulkanManager.h"
-#include "log4cplus_log.h"
 #include "FPSUtil.h"
+#include "log4cplus_log.h"
+#include <iostream>
+
+int xPre;
+int yPre;
+double xDis;
+double yDis;
+bool isLeftMousePressed = false;
+bool firstMouse = true; // 用于防止初始跳转
 
 void error_callback(int error, const char* description) {
-    LHW_ERROR("error_callback: " << description);
+    
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, true);
+    }
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -15,15 +25,41 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_LEFT) {
+        if (action == GLFW_PRESS) {
+            isLeftMousePressed = true;
+            std::cout << "[Event] Left Mouse Button Pressed" << std::endl;
 
+            // 获取当前光标位置作为起始点
+            double xpos, ypos;
+            glfwGetCursorPos(window, &xpos, &ypos);
+            xPre = xpos;
+            yPre = ypos;
+        }
+        else if (action == GLFW_RELEASE) {
+            isLeftMousePressed = false;
+            std::cout << "[Event] Left Mouse Button Released" << std::endl;
+        }
+    }
 }
 
 void cursor_position_callback(GLFWwindow* window, double x, double y) {
+    if (!isLeftMousePressed) {
+        return;
+    }
 
+    xDis = x - xPre;                                                //计算触控点x位移
+    yDis = y - yPre;                                                //计算触控点y位移
+    MyVulkanManager::xAngle += yDis / 10;                            //计算x轴旋转角
+    MyVulkanManager::yAngle += xDis / 10;                            //计算y轴旋转角
+    xPre = x;                                                    //记录触控点x坐标
+    yPre = y;                                                    //记录触控点y坐标
+
+    std::cout << "[Drag] Moving: xDis=" << xDis << ", yDis=" << yDis << std::endl;
 }
 
 void scroll_callback(GLFWwindow* window, double x, double y) {
-
+    
 }
 
 void init_glfw_window() {
@@ -33,6 +69,7 @@ void init_glfw_window() {
         return;
     }
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
     //3> glfw window creation
     GLFWwindow* s_pWindow = glfwCreateWindow(MyVulkanManager::screenWidth, MyVulkanManager::screenHeight, "Titile", NULL, NULL);
@@ -73,6 +110,7 @@ int main() {
 
     FPSUtil::init();
     while (!glfwWindowShouldClose(MyVulkanManager::s_pWindow)) {
+        glfwSwapBuffers(MyVulkanManager::s_pWindow);
         glfwPollEvents();
 
         MyVulkanManager::drawObject();//执行绘制

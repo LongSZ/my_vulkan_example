@@ -14,7 +14,6 @@
 
 class MyVulkanManager {
 public:
-    static bool loopDrawFlag;//绘制的循环工作标志
     static std::vector<const char *> instanceExtensionNames;//需要使用的实例扩展名称列表
     static VkInstance instance;//Vulkan实例
     static uint32_t gpuCount;//物理设备数量
@@ -35,7 +34,6 @@ public:
     static uint32_t screenWidth;//屏幕宽度
     static uint32_t screenHeight;//屏幕高度
     static GLFWwindow* s_pWindow;
-    static void init_glfw_window();
 
     static VkSurfaceKHR surface;//KHR表面
 
@@ -76,7 +74,6 @@ public:
     static void create_frame_buffer();//创建帧缓冲
     static void createDrawableObject();//创建绘制用物体
     static void drawObject();//执行场景中的物体绘制
-    static void doVulkan();//启动线程执行Vulkan任务
     static void initPipeline();//初始化管线
     static void createFence();//创建栅栏
     static void initPresentInfo();//初始化显示信息
