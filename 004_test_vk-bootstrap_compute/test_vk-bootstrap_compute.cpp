@@ -131,7 +131,7 @@ void create_descriptor(Init& init, Data& data) {
 }
 
 void create_compute_pipeline(Init& init, Data& data) {
-    auto spv_code = readFile("shaders/simple_compute.comp.spv");
+    auto spv_code = readFile("shaders/004_test_vk-bootstrap_compute.spv");
 
     VkShaderModuleCreateInfo create_info = {};
     create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
