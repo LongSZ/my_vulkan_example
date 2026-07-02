@@ -229,8 +229,8 @@ VkShaderModule createShaderModule(Init& init, const std::vector<char>& code) {
 }
 
 int create_graphics_pipeline(Init& init, RenderData& data) {
-    auto vert_code = readFile("shaders/triangle.vert.spv");
-    auto frag_code = readFile("shaders/triangle.frag.spv");
+    auto vert_code = readFile("shaders/003_test_vk-bootstrap_triangle.vert.spv");
+    auto frag_code = readFile("shaders/003_test_vk-bootstrap_triangle.frag.spv");
 
     VkShaderModule vert_module = createShaderModule(init, vert_code);
     VkShaderModule frag_module = createShaderModule(init, frag_code);
